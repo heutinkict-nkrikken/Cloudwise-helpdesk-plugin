@@ -3,7 +3,7 @@
  * Plugin Name: Cloudwise dashboard widget
  * Plugin URI: https://github.com/heutinkict-nkrikken/Cloudwise-helpdesk-plugin.git
  * Description: Een eenvoudige widget voor het tonen van hulpdeskinformatie in het WordPress-dashboard.
- * Version: 1.2.2
+ * Version: 2.0
  * Author: Cloudwise
  * Author URI: https://cloudwise.nl
  * License: GPL2
@@ -26,7 +26,7 @@ add_action('wp_dashboard_setup', 'hulpdesk_dashboard_widget');
 
 // Functie die de inhoud van de widget genereert
 function hulpdesk_widget_content() {
-    echo '<h2>Cloudwise</2>';
+    echo '<h2>Cloudwise!</2>';
     echo '<p><strong>Website dashboard</strong><br />';
     echo 'Welkom op het dashboard van je website. Gebruik de menu\'s hiernaast om je website aan te passen.</p>';
     echo '<p><strong>Contact met onze servicedesk</strong><br />';
@@ -96,7 +96,7 @@ function cloudwise_plugin_update($transient) {
 
     // Plugin URL en versie-informatie instellen
     $plugin_slug = 'cloudwise-helpdesk-plugin/cloudwise-helpdesk-plugin.php';
-    $plugin_version = '1.2.2'; // Dit is de versie die je in je plugin bestand hebt gedefinieerd
+    $plugin_version = '2.0'; // Dit is de versie die je in je plugin bestand hebt gedefinieerd
 
     // Get the GitHub latest release data
     $response = wp_remote_get('https://api.github.com/repos/heutinkict-nkrikken/Cloudwise-helpdesk-plugin/releases/latest');
