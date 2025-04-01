@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Hulpdesk Dashboard Widget
- * Plugin URI: https://github.com/jouwusername/hulpdesk-dashboard-widget
+ * Plugin Name: Cloudwise dashboard widget
+ * Plugin URI: https://github.com/heutinkict-nkrikken/Cloudwise-helpdesk-plugin.git
  * Description: Een eenvoudige widget voor het tonen van hulpdeskinformatie in het WordPress-dashboard.
  * Version: 1.0
  * Author: Cloudwise
- * Author URI: https://jouwwebsite.nl
+ * Author URI: https://cloudwise.nl
  * License: GPL2
  */
 
