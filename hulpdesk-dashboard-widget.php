@@ -82,12 +82,6 @@ function cloudwise_check_for_plugin_update() {
 }
 add_action('admin_init', 'cloudwise_check_for_plugin_update');
 
-// Functie om de notificatie weer te geven in het WordPress-dashboard
-function cloudwise_update_notification() {
-  echo '<div class="updated"><p><strong>Er is een nieuwe versie van de Cloudwise Helpdesk Plugin beschikbaar!</strong></p></div>';
-}
-
-
 // Toon een melding in het WordPress dashboard als er een update beschikbaar is
 function cloudwise_update_notification() {
     echo '<div class="updated"><p><strong>Er is een nieuwe versie van de Cloudwise Helpdesk Plugin beschikbaar!</strong> <a href="' . esc_url(admin_url('update-core.php')) . '">Klik hier om bij te werken.</a></p></div>';
