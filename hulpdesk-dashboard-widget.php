@@ -27,7 +27,7 @@ add_action('wp_dashboard_setup', 'hulpdesk_dashboard_widget');
 // Functie die de inhoud van de widget genereert
 function hulpdesk_widget_content() {
   echo '<p><strong>Website dashboard</strong><br />';
-  echo 'Welkom op het dashboard van je website. Gebruik de menu\'s hiernaast om je website aan te passen.</p>';
+  echo 'Welkom op het dashboard van je website. Gebruik de menu\'s hiernaast om je website aan te passen..</p>';
   echo '<p><strong>Contact met onze servicedesk</strong><br />';
   echo 'Heb je hulp nodig bij het beheren van je website, neem dan een kijkje in onze online kennisbank. Hier vind je antwoord op de meest gestelde vragen. Kom je er niet uit, dan kun je contact opnemen met onze servicedesk.</p>';
   echo '<p><strong>Ondersteuning</strong><br/ >';
