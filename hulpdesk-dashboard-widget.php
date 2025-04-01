@@ -38,37 +38,55 @@ function hulpdesk_widget_content() {
 
 // Voeg een versiecontrole toe via de GitHub API
 function cloudwise_check_for_plugin_update() {
-    // GitHub repository URL voor de plugin release
-    $url = 'https://api.github.com/repos/heutinkict-nkrikken/Cloudwise-helpdesk-plugin/releases/latest';
+  // GitHub repository URL voor de plugin release
+  $url = 'https://api.github.com/repos/heutinkict-nkrikken/Cloudwise-helpdesk-plugin/releases/latest';
 
-    // cURL-aanroep om de laatste release-informatie op te halen
-    $response = wp_remote_get($url, array(
-        'timeout' => 15,
-        'headers'  => array(
-            'User-Agent' => 'WordPress' // GitHub vereist een User-Agent header
-        )
-    ));
+  // cURL-aanroep om de laatste release-informatie op te halen
+  $response = wp_remote_get($url, array(
+      'timeout' => 15,
+      'headers'  => array(
+          'User-Agent' => 'WordPress' // GitHub vereist een User-Agent header
+      )
+  ));
 
-    if (is_wp_error($response)) {
-        return; // Stop als er een fout optreedt
-    }
+  if (is_wp_error($response)) {
+      return; // Stop als er een fout optreedt
+  }
 
-    // Zet de response om in een object
-    $data = json_decode(wp_remote_retrieve_body($response));
+  // Zet de response om in een object
+  $data = json_decode(wp_remote_retrieve_body($response));
 
-    // Haal de nieuwste versie op van GitHub
-    $latest_version = $data->tag_name;
+  // Haal de nieuwste versie op van GitHub
+  $latest_version = $data->tag_name;
 
-    // Haal de huidige versie van de plugin op
-    $current_version = get_plugin_data(WP_PLUGIN_DIR . '/cloudwise-helpdesk-plugin/cloudwise-helpdesk-plugin.php')['Version'];
+  // Haal de huidige versie van de plugin op
+  $current_version = get_plugin_data(WP_PLUGIN_DIR . '/cloudwise-helpdesk-plugin/cloudwise-helpdesk-plugin.php')['Version'];
 
-    // Vergelijk de huidige versie met de laatste versie op GitHub
-    if (version_compare($current_version, $latest_version, '<')) {
-        // Als er een nieuwe versie is, bied dan de update aan
-        add_action('admin_notices', 'cloudwise_update_notification');
-    }
+  // Vergelijk de huidige versie met de laatste versie op GitHub
+  if (version_compare($current_version, $latest_version, '<')) {
+      // Als er een nieuwe versie is, bied dan de update aan via transients
+      add_filter('site_transient_update_plugins', function($transient) use ($latest_version) {
+          $transient->response['cloudwise-helpdesk-plugin/cloudwise-helpdesk-plugin.php'] = (object) [
+              'slug' => 'cloudwise-helpdesk-plugin',
+              'plugin' => 'cloudwise-helpdesk-plugin/cloudwise-helpdesk-plugin.php',
+              'new_version' => $latest_version,
+              'url' => 'https://github.com/heutinkict-nkrikken/Cloudwise-helpdesk-plugin/releases',
+              'package' => 'https://github.com/heutinkict-nkrikken/Cloudwise-helpdesk-plugin/archive/' . $latest_version . '.zip'
+          ];
+          return $transient;
+      });
+
+      // Toon een admin-notice voor de update
+      add_action('admin_notices', 'cloudwise_update_notification');
+  }
 }
 add_action('admin_init', 'cloudwise_check_for_plugin_update');
+
+// Functie om de notificatie weer te geven in het WordPress-dashboard
+function cloudwise_update_notification() {
+  echo '<div class="updated"><p><strong>Er is een nieuwe versie van de Cloudwise Helpdesk Plugin beschikbaar!</strong></p></div>';
+}
+
 
 // Toon een melding in het WordPress dashboard als er een update beschikbaar is
 function cloudwise_update_notification() {
