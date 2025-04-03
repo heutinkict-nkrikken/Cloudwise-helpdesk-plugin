@@ -35,9 +35,8 @@ function helpdesk_widget_content() {
   echo '<p>Je kunt ook een melding indienen via de Online Servicedesk. Meer informatie over hoe je ons kunt bereiken vind je op <a href="https://www.cloudwise.nl/service/" target="_blank">www.cloudwise.nl/service</a></p>';
 }
 
-// Voeg een versiecontrole toe via de GitHub API
+// Voeg versiecontrole toe via de GitHub API
 function cloudwise_check_for_plugin_update() {
-    // GitHub repository URL voor de plugin release
     $url = 'https://api.github.com/repos/heutinkict-nkrikken/Cloudwise-helpdesk-plugin/releases/latest';
 
     // cURL-aanroep om de laatste release-informatie op te halen
@@ -52,7 +51,6 @@ function cloudwise_check_for_plugin_update() {
         return; // Stop als er een fout optreedt
     }
 
-    // Zet de response om in een object
     $data = json_decode(wp_remote_retrieve_body($response));
 
     // Check of er een geldig resultaat is
@@ -76,41 +74,46 @@ function cloudwise_check_for_plugin_update() {
     }
 }
 add_action('admin_init', 'cloudwise_check_for_plugin_update');
+
 // Functie om de update-informatie toe te voegen aan de transients
 function cloudwise_add_update_to_transient($transient) {
-  // Haal de GitHub release data opnieuw op
-  $url = 'https://api.github.com/repos/heutinkict-nkrikken/Cloudwise-helpdesk-plugin/releases/latest';
-  $response = wp_remote_get($url, array(
-      'timeout' => 15,
-      'headers'  => array(
-          'User-Agent' => 'WordPress' // GitHub vereist een User-Agent header
-      )
-  ));
+    // GitHub API voor de laatste release-informatie
+    $url = 'https://api.github.com/repos/heutinkict-nkrikken/Cloudwise-helpdesk-plugin/releases/latest';
+    $response = wp_remote_get($url, array(
+        'timeout' => 15,
+        'headers'  => array(
+            'User-Agent' => 'WordPress' // GitHub vereist een User-Agent header
+        )
+    ));
 
-  if (is_wp_error($response)) {
-      return $transient; // Stop als er een fout optreedt
-  }
+    if (is_wp_error($response)) {
+        return $transient; // Stop als er een fout optreedt
+    }
 
-  // Zet de response om in een object
-  $data = json_decode(wp_remote_retrieve_body($response));
+    $data = json_decode(wp_remote_retrieve_body($response));
 
-  // Haal de laatste versie- en downloadinformatie
-  $latest_version = $data->tag_name;
-  $package_url = $data->zipball_url;
-  $slug = 'cloudwise-helpdesk-plugin'; // Zorg ervoor dat dit overeenkomt met de plugin foldernaam
+    // Haal de laatste versie- en downloadinformatie
+    $latest_version = $data->tag_name;
+    $package_url = $data->zipball_url;
+    $slug = 'cloudwise-helpdesk-plugin';
 
-  // Zorg ervoor dat de transients informatie correct wordt toegevoegd
-  if (!empty($package_url)) {
-      $transient->response["$slug/$slug.php"] = (object) [
-          'slug'        => $slug,
-          'plugin'      => "$slug/$slug.php",
-          'new_version' => $latest_version, // Haal de versie op uit de release
-          'url'         => 'https://github.com/heutinkict-nkrikken/Cloudwise-helpdesk-plugin/releases',
-          'package'     => $package_url, // Gebruik de juiste versie van je release
-      ];
-  }
+    // Voeg de update-informatie toe aan de transients
+    if (!empty($package_url)) {
+        $transient->response["$slug/$slug.php"] = (object) [
+            'slug'        => $slug,
+            'plugin'      => "$slug/$slug.php",
+            'new_version' => $latest_version,
+            'url'         => 'https://github.com/heutinkict-nkrikken/Cloudwise-helpdesk-plugin/releases',
+            'package'     => $package_url,
+        ];
+    }
 
-  return $transient;
+    return $transient;
 }
 
-?>
+// Admin notice voor plugin-update
+function cloudwise_update_notification() {
+    echo '<div class="notice notice-info is-dismissible">
+             <p>' . __('Er is een nieuwe versie van de Cloudwise Helpdesk Plugin beschikbaar!', 'cloudwise-helpdesk-plugin') . '</p>
+         </div>';
+}
