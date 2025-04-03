@@ -26,6 +26,7 @@ add_action('wp_dashboard_setup', 'helpdesk_dashboard_widget');
 
 // Functie die de inhoud van de widget genereert
 function helpdesk_widget_content() {
+  echo '<h2>Info vanuit Cloudwise</h2>';
   echo '<p><strong>Website dashboard</strong><br />';
   echo 'Welkom op het dashboard van je website. Gebruik de menu\'s hiernaast om je website aan te passen.</p>';
   echo '<p><strong>Contact met onze servicedesk</strong><br />';
